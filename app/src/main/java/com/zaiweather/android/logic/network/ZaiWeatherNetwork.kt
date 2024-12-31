@@ -1,6 +1,5 @@
 package com.zaiweather.android.logic.network
 
-import com.zaiweather.android.logic.model.PlaceResponse
 import retrofit2.Call
 import retrofit2.Response
 import kotlin.coroutines.resumeWithException
@@ -10,6 +9,11 @@ object ZaiWeatherNetwork {
     private val placeService = ServiceCreator.createService(PlaceService::class.java)
 
     public suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
+
+    private val weatherService = ServiceCreator.createService(WeatherService::class.java)
+
+    public suspend fun getDailyWeather(lng: String, lat: String) = weatherService.getDailyWeather(lng, lat).await()
+    public suspend fun getRealtimeWeather(lng: String, lat: String) = weatherService.getRealtimeWeather(lng, lat).await()
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->

@@ -1,5 +1,6 @@
 package com.zaiweather.android.ui.place
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,8 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.zaiweather.android.MainActivity
 import com.zaiweather.android.R
 import com.zaiweather.android.databinding.FragmentPlaceBinding
+import com.zaiweather.android.logic.model.Weather
+import com.zaiweather.android.ui.weather.WeatherActivity
+
 class PlaceFragment:Fragment() {
     private var _binding: FragmentPlaceBinding? = null
     private val binding get() = _binding!!
@@ -33,6 +38,17 @@ class PlaceFragment:Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if(activity is MainActivity && viewModel.isPlaceSaved()){
+            val place = viewModel.getSavedPlaces()
+            val intent = Intent(context,WeatherActivity::class.java).apply {
+                putExtra("location_lng",place.location.lng)
+                putExtra("location_lat",place.location.lat)
+                putExtra("place_name",place.name)
+            }
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
         val layoutManager = LinearLayoutManager(activity)
         binding.recyclerView.layoutManager = layoutManager
         adapter = PlaceAdapter(this, viewModel.placeList)
