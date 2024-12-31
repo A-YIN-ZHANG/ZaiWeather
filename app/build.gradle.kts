@@ -21,6 +21,15 @@ android {
         }
     }
 
+    signingConfigs {
+        create("config") {
+            storeFile = file(project.findProperty("KEY_PATH") as String)
+            storePassword = project.findProperty("KEY_PASS") as String
+            keyAlias = project.findProperty("ALIAS_NAME") as String
+            keyPassword = project.findProperty("ALIAS_PASS") as String
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -28,6 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("config")
         }
     }
     compileOptions {
